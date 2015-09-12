@@ -170,9 +170,9 @@ for (r=internal_radius_offset; r<(internal_radius_offset+num_leds); r++)
 //    Serial.println(x);
 //    Serial.println(y);
 
-    dataRed[t][23-(r-7)] = pgm_read_byte_near(b+(dimension*3)*(y-1)+3*(x-1));
-    dataGreen[t][23-(r-7)] = pgm_read_byte_near(b+(dimension*3)*(y-1)+3*(x-1)+1);
-    dataBlue[t][23-(r-7)] = pgm_read_byte_near(b+(dimension*3)*(y-1)+3*(x-1)+2);
+    dataRed[t][(num_leds-1)-(r-internal_radius_offset)] = pgm_read_byte_near(b+(dimension*3)*(y-1)+3*(x-1));
+    dataGreen[t][(num_leds-1)-(r-internal_radius_offset)] = pgm_read_byte_near(b+(dimension*3)*(y-1)+3*(x-1)+1);
+    dataBlue[t][(num_leds-1)-(r-internal_radius_offset)] = pgm_read_byte_near(b+(dimension*3)*(y-1)+3*(x-1)+2);
 
   }
 }
@@ -251,7 +251,7 @@ void adjustColor()
 {
   int r=0;
   int t=0;
- for (r=0; r<24; r++)
+ for (r=0; r<num_leds; r++)
 {
   for (t=0; t<num_slices; t++)
   {
@@ -281,12 +281,12 @@ return (int)(pow((float)index / (float)255, factor) * 255 + 0.5);
 }
 void rev() {
   prevLED = currLED;
-  currLED = (currLED < 23)?(currLED+1):0;
-  if (slice < num_slices-1 && currLED == 23)
+  currLED = (currLED < (num_leds-1))?(currLED+1):0;
+  if (slice < num_slices-1 && currLED == num_leds-1)
   {
     slice++;
   }
-  else if (currLED == 23)
+  else if (currLED == num_leds-1)
   {
     slice = 0;
   }
