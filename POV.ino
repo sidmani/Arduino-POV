@@ -1,7 +1,7 @@
 #include <TimerOne.h>
 #include <avr/pgmspace.h>
 const int num_slices = 90;
-const int offset_slice = (70/90)*num_slices;
+const int offset_slice = (29/90)*num_slices;
 const int num_leds = 24;
 const int internal_radius_offset = 7;
 const int redPin = 16;
@@ -10,7 +10,7 @@ const int bluePin = 14;
 const int greenPin = 15;
 const int debounceTime = 10000;
 const int black_adj = 24;
-const int ledPins[24] = {1,3,4,26,25,23,22,20,2,5,24,21,18,A0,A3,A6,19,6,7,A1,A2,A4,A5,A7};
+const int ledPins[num_leds] = {1,3,4,26,25,23,22,20,2,5,24,21,18,A0,A3,A6,19,6,7,A1,A2,A4,A5,A7};
 const float redGamma = 2.8;
 const float blueGamma = 2.8;
 const float greenGamma = 2.8;
@@ -33,9 +33,9 @@ volatile int slice;
 // volatile long microsPerSlice;
 volatile int revNum;
 volatile int microsPerLED;
-byte dataRed[num_slices][24];
-byte dataBlue[num_slices][24];
-byte dataGreen[num_slices][24];
+byte dataRed[num_slices][num_leds];
+byte dataBlue[num_slices][num_leds];
+byte dataGreen[num_slices][num_leds];
 volatile int interrupt=0;
 volatile boolean hall_detached;
 void setup()
@@ -78,7 +78,7 @@ void randomStripes()
     int green_lev = random(255);
 
     int q;
-    for (q=0; q<24; q++)
+    for (q=0; q<num_leds; q++)
     {
       dataRed[i][q] = red_lev;
       dataBlue[i][q] = blue_lev;
@@ -92,7 +92,7 @@ void image_polar(const byte b[])
 int i; 
 int f;
 int currByte=0;
-for (i = 0; i < 24; i++)
+for (i = 0; i < num_leds; i++)
 {
   for (f = 0; f < num_slices; f++)
   {
@@ -143,7 +143,7 @@ void roundToBoolean()
 {
 int r=0;
 int t=0;
- for (r=0; r<24; r++)
+ for (r=0; r<num_leds; r++)
 {
   for (t=0; t<num_slices; t++)
   {    
@@ -184,7 +184,7 @@ void tricolor(uint8_t red[3], uint8_t green[3], uint8_t blue[3], boolean analog)
   int q;
   if (analog)
   {
-    for (q=0; q<24; q++)
+    for (q=0; q<num_leds; q++)
     {
       for (i=0; i<30; i++)
       {
@@ -213,7 +213,7 @@ void tricolor(uint8_t red[3], uint8_t green[3], uint8_t blue[3], boolean analog)
     }
   }
   else {
-    for (q=0; q<24; q++)
+    for (q=0; q<num_leds; q++)
     {
       for (i=0; i<30; i++)
       {
@@ -300,7 +300,7 @@ void hallInt()
   {
    // microsPerRev = (micros() - strt);
    // microsPerSlice = microsPerRev/90;
-    microsPerLED = ((micros() - strt)/num_slices)/24;
+    microsPerLED = ((micros() - strt)/num_slices)/num_leds;
     strt = micros();
     slice = offset_slice;
   	Timer1.setPeriod(microsPerLED);
