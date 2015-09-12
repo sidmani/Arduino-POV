@@ -1,7 +1,9 @@
 #include <TimerOne.h>
 #include <avr/pgmspace.h>
 const int num_slices = 90;
-const int offset_slice = (29/90)*num_slices;
+const int offset_slice = (70/90)*num_slices;
+const int num_leds = 24;
+const int internal_radius_offset = 7;
 const int redPin = 16;
 const int hallPin = 0;
 const int bluePin = 14;
@@ -44,7 +46,7 @@ void setup()
   Timer1.attachInterrupt(rev);
   attachInterrupt(hallPin, hallInt, RISING);
   int i;
-  for (i=0; i<24; i++)
+  for (i=0; i<num_leds; i++)
   {
     pinMode(ledPins[i], OUTPUT);
   }
@@ -157,7 +159,7 @@ void image_rectangular_inverse(const byte b[], int dimension)
 int r=0;
 int t=0;
 
-for (r=7; r<31; r++)
+for (r=internal_radius_offset; r<(internal_radius_offset+num_leds); r++)
 {
   for (t=0; t<num_slices; t++)
   {
