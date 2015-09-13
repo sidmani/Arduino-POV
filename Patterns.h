@@ -1,5 +1,6 @@
 #ifndef Patterns_h
 #define Patterns_h
+#include "definitions.h"
 
 
 //////***********//////

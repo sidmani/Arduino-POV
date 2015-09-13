@@ -1,6 +1,7 @@
 #ifndef Images_h
 #define Images_h
 #include "Arduino.h"
+#include "definitions.h"
 #define num_slices 90
 #define num_leds 30
 #define num_pixels num_leds*num_slices

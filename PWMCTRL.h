@@ -1,5 +1,7 @@
 #ifndef PWMCTRL_h
 #define PWMCTRL_h
+#include "definitions.h"
+
 // Frequency modes for TIMER1
 #define PWM62k   1   //62500 Hz
 #define PWM8k    2   // 7812 Hz

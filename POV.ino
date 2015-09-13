@@ -3,24 +3,18 @@
 #include "Images.h"
 #include "PWMCTRL.h"
 #include "Patterns.h"
+#include "definitions.h"
+
 /////pins/////
-#define redPin 16
-#define hallPin 0
-#define bluePin 14
-#define greenPin 15
-const int ledPins[num_leds] = {13,12,11,10,9,8,A7,A5,A4,A2,A1,7,6,19,A6,A3,A0,18,21,24,5,2,20,22,23,25,26,4,3,1};
 //////////////
 //#define image_source pikachu
 ///////adjustment values////////
-#define offset_slice 40
-#define internal_radius_offset 1
-#define debounceTime 10000
 ////////////////////////////////
 ///constants///
 
-//typedef Pixel (*pixelRetriever)(int,int);
 //Pixel *source_func;
-Pixel **source_img;
+//Pixel **source_img;
+int source_img;
 boolean pixel_source_type; //0 = image, 1 = function
 volatile uint8_t prevLED;
 volatile uint8_t currLED;
@@ -44,7 +38,7 @@ void setup()
   pinMode(redPin, OUTPUT);
   pinMode(bluePin, OUTPUT);
   pinMode(greenPin, OUTPUT);
-  setSource((Pixel**)pikachu);
+  setSource((int)pikachu[0]);
 }
 void loop()
 {
@@ -131,9 +125,10 @@ return (*f)(led,slice);
 
 }
 
-Pixel getPixel(Pixel **s, int led, int currSlice)
+Pixel getPixel(int s, int led, int currSlice)
 {
-	Pixel p ={pgm_read_byte_near(&(s[currSlice][led].red)), pgm_read_byte_near(&(s[currSlice][led].green)), pgm_read_byte_near(&(s[currSlice][led].red))};
+	int offset = currSlice*num_leds*3+led*3;	
+	Pixel p ={pgm_read_byte_near(s+offset), pgm_read_byte_near(s+offset+1), pgm_read_byte_near(s+offset+2)};
 	p = adjustColor(p);
 	return p;
 }
@@ -143,7 +138,7 @@ void setSource(Pixel(*f)(int,int))
 pixel_source_type = 1;
 }
 
-void setSource(Pixel **p)
+void setSource(int p)
 {
 source_img = p;
 }
