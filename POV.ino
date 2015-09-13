@@ -8,7 +8,7 @@
 #define hallPin 0
 #define bluePin 14
 #define greenPin 15
-const int ledPins[num_leds] = {8,9,10,11,12,13,A7,A5,A4,A2,A1,7,6,19,A6,A3,A0,18,21,24,5,2,20,22,23,25,26,4,3,1};
+const int ledPins[num_leds] = {13,12,11,10,9,8,A7,A5,A4,A2,A1,7,6,19,A6,A3,A0,18,21,24,5,2,20,22,23,25,26,4,3,1};
 //////////////
 //#define image_source pikachu
 ///////adjustment values////////
@@ -18,7 +18,10 @@ const int ledPins[num_leds] = {8,9,10,11,12,13,A7,A5,A4,A2,A1,7,6,19,A6,A3,A0,18
 ////////////////////////////////
 ///constants///
 
-
+//typedef Pixel (*pixelRetriever)(int,int);
+//Pixel *source_func;
+Pixel **source_img;
+boolean pixel_source_type; //0 = image, 1 = function
 volatile uint8_t prevLED;
 volatile uint8_t currLED;
 volatile uint8_t nextSlice;
@@ -26,7 +29,6 @@ volatile int debounce=0;
 volatile long strt=0;
 volatile uint8_t slice;
 volatile int microsPerLED;
-
 void setup()
 { 
   pwmConfigure(1);
@@ -42,11 +44,12 @@ void setup()
   pinMode(redPin, OUTPUT);
   pinMode(bluePin, OUTPUT);
   pinMode(greenPin, OUTPUT);
+  setSource((Pixel**)pikachu);
 }
 void loop()
 {
-//update();
 //free time (~86% of processor time is in this loop)
+
 }
 
 
@@ -59,7 +62,6 @@ void loop()
 /////   timing  //////
 //////***********//////
 void rev() {
-	//interrupts();
 //		long test = micros();
 
   prevLED = currLED;
@@ -68,13 +70,20 @@ void rev() {
   if (slice < num_slices-1 && currLED == num_leds-1)
   {
     slice++;
-   // nextSlice = (slice<(num_slices-1))?(slice+1):0;
-  }
+      }
   else if (currLED == num_leds-1)
   {
     slice = 0;
   }
-  write_data(true, getPixel(pikachu[slice], currLED));
+  if (pixel_source_type == 0)
+  {
+  write_data(true, getPixel(source_img, currLED, slice));
+  }
+  else
+  {
+   // write_data(true, getPixel(source_img[slice], currLED));
+
+  }
 //  Serial.println(micros() - test);
 
 }
@@ -120,12 +129,21 @@ Pixel getPixel(Pixel(*f)(int,int), int led, int slice)
 
 return (*f)(led,slice);
 
-//buf = adjustColor(buf);
 }
 
-Pixel getPixel(Pixel s[num_leds], int led)
+Pixel getPixel(Pixel **s, int led, int currSlice)
 {
-	Pixel p ={pgm_read_byte_near(&(s[led].red)), pgm_read_byte_near(&(s[led].green)), pgm_read_byte_near(&(s[led].red))};
+	Pixel p ={pgm_read_byte_near(&(s[currSlice][led].red)), pgm_read_byte_near(&(s[currSlice][led].green)), pgm_read_byte_near(&(s[currSlice][led].red))};
 	p = adjustColor(p);
 	return p;
+}
+void setSource(Pixel(*f)(int,int))
+{
+//source_func = *f;
+pixel_source_type = 1;
+}
+
+void setSource(Pixel **p)
+{
+source_img = p;
 }
