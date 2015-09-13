@@ -15,43 +15,41 @@ int pikachu[]  = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 
 void setup() {
   image_rectangular_inverse(pikachu, 64);
-  print("const byte dataRed[90][30] PROGMEM = {");
+  print("Image result PROGMEM = {");
   for (int t=0; t<90; t++)
   {
-    print("{");
+    print("{{");
     for (int r=0; r<30; r++)
     {
       print(dataRed[t][r]);
       print(",");
     }
+      //    print(" // red");
     println("},");
-  }
-  println(" };");
-   print("const byte dataBlue[90][30] PROGMEM = {");
-  for (int t=0; t<90; t++)
-  {
-    print("{");
+    //print("/////end red, begin blue////");
+      print("{");
     for (int r=0; r<30; r++)
     {
       print(dataBlue[t][r]);
       print(",");
     }
+     //     print(" // blue");
+
     println("},");
-  }
-  println(" };");
-  
-   print("const byte dataGreen[90][30] PROGMEM = {");
-  for (int t=0; t<90; t++)
-  {
-    print("{");
+    //    print("/////end blue, begin green////");
+
+        print("{");
     for (int r=0; r<30; r++)
     {
-      print(dataRed[t][r]);
+      print(dataGreen[t][r]);
       print(",");
     }
-    println("},");
+          //print(" // green");
+
+    println("}},");
   }
-  println(" };");
+      println("};");
+
   exit();
 }
 void image_rectangular_inverse(int b[], int dimension)
