@@ -18,35 +18,18 @@ void setup() {
   print("Image result PROGMEM = {");
   for (int t=0; t<90; t++)
   {
-    print("{{");
+    print("{");
     for (int r=0; r<30; r++)
     {
+      print("{");
       print(dataRed[t][r]);
       print(",");
-    }
-      //    print(" // red");
-    println("},");
-    //print("/////end red, begin blue////");
-      print("{");
-    for (int r=0; r<30; r++)
-    {
       print(dataBlue[t][r]);
       print(",");
-    }
-     //     print(" // blue");
-
-    println("},");
-    //    print("/////end blue, begin green////");
-
-        print("{");
-    for (int r=0; r<30; r++)
-    {
       print(dataGreen[t][r]);
-      print(",");
+      print("},");
     }
-          //print(" // green");
-
-    println("}},");
+    println("},");
   }
       println("};");
 
