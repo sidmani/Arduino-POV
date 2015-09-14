@@ -64,10 +64,10 @@ uint8_t blue;
 
 Pixel adjustColor(Pixel s)
 {
-	s.red = pgm_read_byte(&gamma[s.red]);
-	s.green = pgm_read_byte(&gamma[s.green]);
-	s.blue = pgm_read_byte(&gamma[s.blue]);
-   	s.red = pgm_read_byte(&red_adj[s.red]);
+	s.red = pgm_read_byte(&(gamma[s.red]));
+	s.green = pgm_read_byte(&(gamma[s.green]));
+	s.blue = pgm_read_byte(&(gamma[s.blue]));
+   	s.red = pgm_read_byte(&(red_adj[s.red]));
     s.red = 255 - s.red;
     s.blue = 255 - s.blue;
     s.green = 255 - s.green;

@@ -10,7 +10,6 @@
 //////
 ///////adjustment values////////
 #define offset_slice 40
-#define internal_radius_offset 1
 #define debounceTime 10000
 #define num_slices 90
 #define num_leds 30

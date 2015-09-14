@@ -104,6 +104,8 @@ void write_data(boolean analog_out, Pixel p)
       pwmSet14(p.blue);
       pwmSet16(p.red);
       pwmSet15(p.green);
+   
+
   }
   else 
   {      
@@ -129,8 +131,7 @@ Pixel getPixel(int s, int led, int currSlice)
 {
 	int offset = currSlice*num_leds*3+led*3;	
 	Pixel p ={pgm_read_byte_near(s+offset), pgm_read_byte_near(s+offset+1), pgm_read_byte_near(s+offset+2)};
-	p = adjustColor(p);
-	return p;
+	return adjustColor(p);
 }
 void setSource(Pixel(*f)(int,int))
 {
