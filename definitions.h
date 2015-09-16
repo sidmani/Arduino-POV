@@ -9,7 +9,6 @@
 #define PWM61    5   //   61 Hz
 //////
 ///////adjustment values////////
-#define offset_slice 40
 #define debounceTime 10000
 #define num_slices 90
 #define num_leds 30

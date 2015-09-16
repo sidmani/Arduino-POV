@@ -18,11 +18,11 @@ int source_img;
 boolean pixel_source_type; //0 = image, 1 = function
 volatile uint8_t prevLED;
 volatile uint8_t currLED;
-volatile uint8_t nextSlice;
 volatile int debounce=0;
 volatile long strt=0;
 volatile uint8_t slice;
 volatile int microsPerLED;
+const int offset_slice = 30;
 void setup()
 { 
   pwmConfigure(1);
@@ -30,7 +30,7 @@ void setup()
   Timer1.start();
   Timer1.attachInterrupt(rev);
   attachInterrupt(hallPin, hallInt, RISING);
-  int i;
+  uint8_t i;
   for (i=0; i<num_leds; i++)
   {
     pinMode(ledPins[i], OUTPUT);
@@ -57,10 +57,9 @@ void loop()
 //////***********//////
 void rev() {
 //		long test = micros();
-
+  interrupts();
   prevLED = currLED;
   currLED = (currLED < (num_leds-1))?(currLED+1):0;
-  //nextLED = (currLED < (num_leds-1))?(currLED+1):0;
   if (slice < num_slices-1 && currLED == num_leds-1)
   {
     slice++;
@@ -120,20 +119,20 @@ void write_data(boolean analog_out, Pixel p)
 
 
 
-Pixel getPixel(Pixel(*f)(int,int), int led, int slice)
+Pixel getPixel(Pixel(*f)(uint8_t,uint8_t), uint8_t led, uint8_t slice)
 {
 
 return (*f)(led,slice);
 
 }
 
-Pixel getPixel(int s, int led, int currSlice)
+Pixel getPixel(int s, uint8_t led, uint8_t currSlice)
 {
-	int offset = currSlice*num_leds*3+led*3;	
-	Pixel p ={pgm_read_byte_near(s+offset), pgm_read_byte_near(s+offset+1), pgm_read_byte_near(s+offset+2)};
+	//int offset = currSlice*num_leds*3+led*3;	
+	Pixel p ={pgm_read_byte_near(s+currSlice*num_leds*3+led*3), pgm_read_byte_near(s+currSlice*num_leds*3+led*3+1), pgm_read_byte_near(s+currSlice*num_leds*3+led*3+2)};
 	return adjustColor(p);
 }
-void setSource(Pixel(*f)(int,int))
+void setSource(Pixel(*f)(uint8_t,uint8_t))
 {
 //source_func = *f;
 pixel_source_type = 1;
