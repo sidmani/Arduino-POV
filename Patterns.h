@@ -2,7 +2,6 @@
 #define Patterns_h
 #include "definitions.h"
 
-
 //////***********//////
 /////  patterns  //////
 //////***********//////
@@ -82,7 +81,39 @@ for (r=internal_radius_offset; r<(internal_radius_offset+num_leds); r++)
   }
 }
 }*/
-
+Pixel hexacolor(uint8_t slice, uint8_t led)
+{
+if (slice <15)
+{
+Pixel p = {0,255,0};
+return p;
+}
+else if (slice < 30)
+{
+Pixel p = {0,0,255};
+return p;
+}
+else if (slice < 45)
+{
+Pixel p = {0,255,255};
+return p;
+}
+else if (slice < 60)
+{
+Pixel p = {255,0,255};
+return p;
+}
+else if (slice < 75)
+{
+Pixel p = {255,0,0};
+return p;
+}
+else if (slice < 90)
+{
+Pixel p = {255,255,0};
+return p;
+}
+}
 /*void tricolor(uint8_t red[3], uint8_t green[3], uint8_t blue[3], boolean analog)
 {
   int i;

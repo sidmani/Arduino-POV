@@ -11,8 +11,11 @@
 ///////adjustment values////////
 ////////////////////////////////
 ///constants///
+void setSourceFunc(Pixel(*f)(uint8_t,uint8_t));
+void setSource(int p);
+Pixel getPixelFunc(uint8_t led, uint8_t slice);
 
-//Pixel *source_func;
+Pixel (*source_func)(uint8_t,uint8_t);
 //Pixel **source_img;
 int source_img;
 boolean pixel_source_type; //0 = image, 1 = function
@@ -22,7 +25,10 @@ volatile int debounce=0;
 volatile long strt=0;
 volatile uint8_t slice;
 volatile int microsPerLED;
+long pattern_start=0;
 const int offset_slice = 30;
+uint8_t currImage = 0;
+int images[2] = {(int)pikachu[0], (int)SFLogo[0]};
 void setup()
 { 
   pwmConfigure(1);
@@ -38,19 +44,36 @@ void setup()
   pinMode(redPin, OUTPUT);
   pinMode(bluePin, OUTPUT);
   pinMode(greenPin, OUTPUT);
-  setSource((int)pikachu[0]);
+  setSource(images[0]);
+  pattern_start = millis();
+
 }
 void loop()
 {
-//free time (~86% of processor time is in this loop)
+if (millis()-pattern_start > 5000) 
+{
+if (currImage == 0)
+{
+setSource(images[currImage]);
+currImage = 1;
+}
+else if (currImage == 1)
+{
+setSource(images[currImage]);
+currImage = 2;
+}
+else
+{
+setSourceFunc(&hexacolor);
+currImage = 0;
+}
+pattern_start = millis();
 
+}
 }
 
 
 
-//Adjust colors with gamma values and black correction, and compensate for common-cathode LEDs
-
-//Calculate gamma values
 
 //////***********//////
 /////   timing  //////
@@ -74,7 +97,7 @@ void rev() {
   }
   else
   {
-   // write_data(true, getPixel(source_img[slice], currLED));
+   write_data(true, getPixelFunc(currLED, slice));
 
   }
 //  Serial.println(micros() - test);
@@ -119,10 +142,10 @@ void write_data(boolean analog_out, Pixel p)
 
 
 
-Pixel getPixel(Pixel(*f)(uint8_t,uint8_t), uint8_t led, uint8_t slice)
+Pixel getPixelFunc(uint8_t led, uint8_t slice)
 {
 
-return (*f)(led,slice);
+return (source_func)(slice,led);
 
 }
 
@@ -132,13 +155,14 @@ Pixel getPixel(int s, uint8_t led, uint8_t currSlice)
 	Pixel p ={pgm_read_byte_near(s+currSlice*num_leds*3+led*3), pgm_read_byte_near(s+currSlice*num_leds*3+led*3+1), pgm_read_byte_near(s+currSlice*num_leds*3+led*3+2)};
 	return adjustColor(p);
 }
-void setSource(Pixel(*f)(uint8_t,uint8_t))
+void setSourceFunc(Pixel(*f)(uint8_t,uint8_t))
 {
-//source_func = *f;
+source_func = f;
 pixel_source_type = 1;
 }
 
 void setSource(int p)
 {
 source_img = p;
+pixel_source_type = 0;
 }
