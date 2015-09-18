@@ -145,7 +145,7 @@ void write_data(boolean analog_out, Pixel p)
 Pixel getPixelFunc(uint8_t led, uint8_t slice)
 {
 
-return (source_func)(slice,led);
+return adjustColor((source_func)(slice,led));
 
 }
 

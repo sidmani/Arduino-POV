@@ -43,20 +43,13 @@ for (i = 0; i < num_leds; i++)
   }
 }
 }*/
-/*void roundToBoolean()
+/*Pixel roundToBoolean(Pixel p)
 {
-int r=0;
-int t=0;
- for (r=0; r<num_leds; r++)
-{
-  for (t=0; t<num_slices; t++)
-  {    
-     def.dataRed[t][r] = (def.dataRed[t][r]<128)?LOW:HIGH;
-     def.dataBlue[t][r] = (def.dataBlue[t][r]<128)?LOW:HIGH;
-     def.dataGreen[t][r] = (def.dataGreen[t][r]<128)?LOW:HIGH;
 
-  }
-}
+    p.red = (p.red<128)?0:255;
+    p.blue = (p.blue<128)?0:255;
+    p.green = (p.green<128)?0:255;
+return p;
 }*/
 /*void image_rectangular_inverse(const byte b[], int dimension)
 {
